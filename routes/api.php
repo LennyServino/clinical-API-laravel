@@ -15,19 +15,23 @@ Route::get('/user', function (Request $request) {
 
 //agrupando rutas protegidas
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/v1/patients', [PatientsController::class, 'index']);
+Route::post('/v1/patients', [PatientsController::class, 'store']);
+
     //Ruta con parametros
     Route::get('/v1/patients/{patientId}', [PatientsController::class, 'patient_by_id']);
     //Ruta de tipo PATCH
     Route::patch('/v1/patients/{patientId}', [PatientsController::class, 'update']);
 
+    Route::get('/v1/patients-doctor', [AppointmentController::class, 'get_patients_by_doctor']);
+
     //ruta para cerrar sesion
     Route::post('/v1/logut', [AuthenticationController::class, 'logout']);
 });
 
-//rutas para los pacientes
-Route::post('/v1/patients', [PatientsController::class, 'store']);
+Route::get('/v1/patients', [PatientsController::class, 'index']);
 
+
+//rutas para los pacientes
 //RUTAS PARA LAS CITAS
 Route::post('/v1/appointments', [AppointmentController::class, 'store']);
 //ruta para el metodo de las fechas (parametros opcionales)

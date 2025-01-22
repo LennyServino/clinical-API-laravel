@@ -75,4 +75,17 @@ class AppointmentController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function get_patients_by_doctor(Request $request) {
+        $user = $request->user();
+        //select patients.name as patient, patients.date_born from appointments inner join users on appointments.user_id = users.id inner join patients on appointments.patient_id = patients.id where users.id = 2;
+
+        if($user->rol_id !== 1) {
+            return response()->json(['message' => 'Solo doctores tienen acceso a esta informacion'], 403);
+        }
+
+        $data = Appointments::select('patients.name as patient', 'patients.date_born', 'patients.gender', 'users.name as doctor')->join('users', 'appointments.user_id', 'users.id')->join('patients', 'appointments.patient_id', 'patients.id')->where('users.id', $user->id)->get();
+
+        return response()->json($data, 200);
+    }
 }
